@@ -2,51 +2,39 @@ package common
 
 import (
 	"context"
+	"os"
 	"testing"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
-	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
-	"github.com/Azure/azure-sdk-for-go/sdk/azcore/cloud"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	armNetwork "github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v5"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork/v5"
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/launchbynttdata/lcaf-component-terratest/lib/azure/configure"
-	"github.com/launchbynttdata/lcaf-component-terratest/lib/azure/login"
 	"github.com/launchbynttdata/lcaf-component-terratest/types"
 	"github.com/stretchr/testify/assert"
 )
 
-const terraformDir string = "../../examples/fw_policy_rule_coll_grp"
-const varFile string = "test.tfvars"
-
 func TestFirewall(t *testing.T, ctx types.TestContext) {
 
-	envVarMap := login.GetEnvironmentVariables()
-	subscriptionID := envVarMap["subscriptionID"]
+	subscriptionID := os.Getenv("ARM_SUBSCRIPTION_ID")
+	if len(subscriptionID) == 0 {
+		t.Fatal("ARM_SUBSCRIPTION_ID is not set in the environment variables ")
+	}
 
-	credential, err := azidentity.NewDefaultAzureCredential(nil)
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		t.Fatalf("Unable to get credentials: %e\n", err)
 	}
-	options := arm.ClientOptions{
-		ClientOptions: azcore.ClientOptions{
-			Cloud: cloud.AzurePublic,
-		},
-	}
 
-	firewallPolicyRuleCollectionGroupsClient, err := armNetwork.NewFirewallPolicyRuleCollectionGroupsClient(subscriptionID, credential, &options)
+	firewallPolicyRuleCollectionGroupsClient, err := armnetwork.NewFirewallPolicyRuleCollectionGroupsClient(subscriptionID, cred, nil)
 	if err != nil {
 		t.Fatalf("Error getting firewall policy rule collection groups client: %v", err)
 	}
 
-	terraformOptions := configure.ConfigureTerraform(terraformDir, []string{terraformDir + "/" + varFile})
-
 	firewallIds := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "firewall_ids")
 	for range firewallIds {
 		t.Run("doesFwPolicyRuleCollGrpExist", func(t *testing.T) {
-			resourceGroupName := terraform.Output(t, terraformOptions, "resource_group_name")
-			policyName := terraform.Output(t, terraformOptions, "policy_name")
-			policyRuleCollectionGroupName := terraform.Output(t, terraformOptions, "policy_rule_collection_group_name")
+			resourceGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
+			policyName := terraform.Output(t, ctx.TerratestTerraformOptions(), "policy_name")
+			policyRuleCollectionGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "policy_rule_collection_group_name")
 
 			prcg, err := firewallPolicyRuleCollectionGroupsClient.Get(context.Background(), resourceGroupName, policyName, policyRuleCollectionGroupName, nil)
 			if err != nil {
