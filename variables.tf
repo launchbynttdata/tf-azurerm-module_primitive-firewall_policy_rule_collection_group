@@ -53,6 +53,16 @@ variable "application_rule_collection" {
     }))
   }))
   default = []
+
+  validation {
+    condition     = alltrue([for collection in var.application_rule_collection : collection.priority >= 100 && collection.priority <= 65000])
+    error_message = "application_rule_collection.priority must be in the range 100 - 65000, inclusive."
+  }
+
+  validation {
+    condition     = alltrue([for collection in var.application_rule_collection : contains(["Allow", "Deny"], collection.action)])
+    error_message = "application_rule_collection.action must contain 'Allow' or 'Deny'."
+  }
 }
 
 variable "network_rule_collection" {
@@ -74,6 +84,15 @@ variable "network_rule_collection" {
   }))
   default = []
 
+  validation {
+    condition     = alltrue([for collection in var.network_rule_collection : collection.priority >= 100 && collection.priority <= 65000])
+    error_message = "network_rule_collection.priority must be in the range 100 - 65000, inclusive."
+  }
+
+  validation {
+    condition     = alltrue([for collection in var.network_rule_collection : contains(["Allow", "Deny"], collection.action)])
+    error_message = "network_rule_collection.action must contain 'Allow' or 'Deny'."
+  }
 }
 
 variable "nat_rule_collection" {
@@ -97,4 +116,13 @@ variable "nat_rule_collection" {
   }))
   default = []
 
+  validation {
+    condition     = alltrue([for collection in var.nat_rule_collection : collection.priority >= 100 && collection.priority <= 65000])
+    error_message = "nat_rule_collection.priority must be in the range 100 - 65000, inclusive."
+  }
+
+  validation {
+    condition     = alltrue([for collection in var.nat_rule_collection : contains(["Allow", "Deny"], collection.action)])
+    error_message = "nat_rule_collection.action must contain 'Allow' or 'Deny'."
+  }
 }
