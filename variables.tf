@@ -122,7 +122,7 @@ variable "nat_rule_collection" {
   }
 
   validation {
-    condition     = alltrue([for collection in var.nat_rule_collection : contains(["Allow", "Deny"], collection.action)])
-    error_message = "nat_rule_collection.action must contain 'Allow' or 'Deny'."
+    condition     = alltrue([for collection in var.nat_rule_collection : contains(["Dnat"], collection.action)])
+    error_message = "nat_rule_collection.action must contain 'Dnat'."
   }
 }
