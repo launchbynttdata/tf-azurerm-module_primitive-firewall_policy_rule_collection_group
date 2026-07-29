@@ -103,19 +103,13 @@ If `make check` target is successful, developer is good to commit the code to pr
 - runs `conftests`. `conftests` make sure `policy` checks are successful.
 - runs `terratest`. This is integration test suit.
 - runs `opa` tests
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | <= 1.5.5 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.5 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.77 |
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.104.2 |
 
 ## Modules
 
@@ -131,17 +125,17 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_name"></a> [name](#input\_name) | (Required) The name which should be used for this Firewall Policy Rule Collection Group. Changing this forces a new Firewall Policy Rule Collection Group to be created. | `string` | n/a | yes |
+| <a name="input_application_rule_collection"></a> [application\_rule\_collection](#input\_application\_rule\_collection) | (Optional) The Application Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br/>    name     = string<br/>    action   = string<br/>    priority = number<br/>    rule = list(object({<br/>      name        = string<br/>      description = optional(string)<br/>      protocols = optional(list(object({<br/>        type = string<br/>        port = number<br/>      })))<br/>      http_headers = optional(list(object({<br/>        name  = string<br/>        value = string<br/>      })))<br/>      source_addresses      = optional(list(string))<br/>      source_ip_groups      = optional(list(string))<br/>      destination_addresses = optional(list(string))<br/>      destination_urls      = optional(list(string))<br/>      destination_fqdns     = optional(list(string))<br/>      destination_fqdn_tags = optional(list(string))<br/>      terminate_tls         = optional(bool)<br/>      web_categories        = optional(list(string))<br/>    }))<br/>  }))</pre> | `[]` | no |
 | <a name="input_firewall_policy_id"></a> [firewall\_policy\_id](#input\_firewall\_policy\_id) | (Required) The ID of the Firewall Policy where the Firewall Policy Rule Collection Group should exist. Changing this forces a new Firewall Policy Rule Collection Group to be created. | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | (Required) The name which should be used for this Firewall Policy Rule Collection Group. Changing this forces a new Firewall Policy Rule Collection Group to be created. | `string` | n/a | yes |
+| <a name="input_nat_rule_collection"></a> [nat\_rule\_collection](#input\_nat\_rule\_collection) | (Optional) The NAT Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br/>    name     = string<br/>    action   = string<br/>    priority = number<br/>    rule = list(object({<br/>      name                = string<br/>      description         = optional(string)<br/>      protocols           = list(string)<br/>      source_addresses    = optional(list(string))<br/>      source_ip_groups    = optional(list(string))<br/>      destination_address = optional(string)<br/>      destination_ports   = optional(list(string))<br/>      translated_address  = optional(string)<br/>      translated_port     = number<br/>      translated_fqdn     = optional(string)<br/>    }))<br/>  }))</pre> | `[]` | no |
+| <a name="input_network_rule_collection"></a> [network\_rule\_collection](#input\_network\_rule\_collection) | (Optional) The Network Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br/>    name     = string<br/>    action   = string<br/>    priority = number<br/>    rule = list(object({<br/>      name                  = string<br/>      description           = optional(string)<br/>      protocols             = list(string)<br/>      destination_ports     = list(string)<br/>      source_addresses      = optional(list(string))<br/>      source_ip_groups      = optional(list(string))<br/>      destination_addresses = optional(list(string))<br/>      destination_fqdns     = optional(list(string))<br/>    }))<br/>  }))</pre> | `[]` | no |
 | <a name="input_priority"></a> [priority](#input\_priority) | (Required) The priority of the Firewall Policy Rule Collection Group. The range is 100-65000. | `number` | n/a | yes |
-| <a name="input_application_rule_collection"></a> [application\_rule\_collection](#input\_application\_rule\_collection) | (Optional) The Application Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br>    name     = string<br>    action   = string<br>    priority = number<br>    rule = list(object({<br>      name        = string<br>      description = optional(string)<br>      protocols = optional(list(object({<br>        type = string<br>        port = number<br>      })))<br>      http_headers = optional(list(object({<br>        name  = string<br>        value = string<br>      })))<br>      source_addresses      = optional(list(string))<br>      source_ip_groups      = optional(list(string))<br>      destination_addresses = optional(list(string))<br>      destination_urls      = optional(list(string))<br>      destination_fqdns     = optional(list(string))<br>      destination_fqdn_tags = optional(list(string))<br>      terminate_tls         = optional(bool)<br>      web_categories        = optional(list(string))<br>    }))<br>  }))</pre> | `[]` | no |
-| <a name="input_network_rule_collection"></a> [network\_rule\_collection](#input\_network\_rule\_collection) | (Optional) The Network Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br>    name     = string<br>    action   = string<br>    priority = number<br>    rule = list(object({<br>      name                  = string<br>      description           = optional(string)<br>      protocols             = list(string)<br>      destination_ports     = list(string)<br>      source_addresses      = optional(list(string))<br>      source_ip_groups      = optional(list(string))<br>      destination_addresses = optional(list(string))<br>      destination_fqdns     = optional(list(string))<br>    }))<br>  }))</pre> | `[]` | no |
-| <a name="input_nat_rule_collection"></a> [nat\_rule\_collection](#input\_nat\_rule\_collection) | (Optional) The NAT Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br>    name     = string<br>    action   = string<br>    priority = number<br>    rule = list(object({<br>      name                = string<br>      description         = optional(string)<br>      protocols           = list(string)<br>      source_addresses    = optional(list(string))<br>      source_ip_groups    = optional(list(string))<br>      destination_address = optional(string)<br>      destination_ports   = optional(list(string))<br>      translated_address  = optional(string)<br>      translated_port     = number<br>      translated_fqdn     = optional(string)<br>    }))<br>  }))</pre> | `[]` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_firewall_policy_rule_collection_group_name"></a> [firewall\_policy\_rule\_collection\_group\_name](#output\_firewall\_policy\_rule\_collection\_group\_name) | value of the Azure Firewall policy rule collection group name |
 | <a name="output_firewall_policy_rule_collection_group_id"></a> [firewall\_policy\_rule\_collection\_group\_id](#output\_firewall\_policy\_rule\_collection\_group\_id) | The ID of the Firewall Policy Rule Collection Group. |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+| <a name="output_firewall_policy_rule_collection_group_name"></a> [firewall\_policy\_rule\_collection\_group\_name](#output\_firewall\_policy\_rule\_collection\_group\_name) | value of the Azure Firewall policy rule collection group name |
+<!-- END_TF_DOCS -->

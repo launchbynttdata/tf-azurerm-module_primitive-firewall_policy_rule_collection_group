@@ -33,5 +33,5 @@ func TestFwRuleCollGrpModule(t *testing.T) {
 		SetTestConfigFileName(infraTFVarFileNameDefault).
 		Build()
 
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestFirewall)
+	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestComposableFirewall)
 }
