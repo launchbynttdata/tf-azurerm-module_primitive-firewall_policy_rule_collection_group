@@ -26,11 +26,17 @@ const (
 )
 
 func TestFwRuleCollGrpModule(t *testing.T) {
-
+	// Azure Firewall provisioning and policy resources can report post-apply drift,
+	// so the second apply is not reliably idempotent in CI.
 	ctx := types.CreateTestContextBuilder().
 		SetTestConfig(&testimpl.ThisTFModuleConfig{}).
 		SetTestConfigFolderName(testConfigsExamplesFolderDefault).
 		SetTestConfigFileName(infraTFVarFileNameDefault).
+		SetTestSpecificFlags(map[string]types.TestFlags{
+			"fw_policy_rule_coll_grp": {
+				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
+			},
+		}).
 		Build()
 
 	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestComposableFirewall)

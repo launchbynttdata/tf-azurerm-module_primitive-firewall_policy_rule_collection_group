@@ -19,6 +19,8 @@ module "firewall_policy_rule_collection_group" {
   application_rule_collection = var.application_rule_collection
   network_rule_collection     = var.network_rule_collection
   nat_rule_collection         = var.nat_rule_collection
+
+  depends_on = [module.firewall_policy]
 }
 
 module "firewall_policy" {
@@ -48,7 +50,7 @@ module "public_ip" {
   version = "~> 2.0"
 
   name                = local.public_ip_custom_name
-  resource_group_name = local.resource_group
+  resource_group_name = module.resource_group.name
   location            = var.location
   allocation_method   = "Static"
   sku                 = "Standard"
@@ -62,7 +64,7 @@ module "network" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/virtual_network/azurerm"
   version = "~> 3.2"
 
-  resource_group_name = local.resource_group
+  resource_group_name = module.resource_group.name
   vnet_name           = local.virtual_network_name
   vnet_location       = var.location
   address_space       = var.address_space
@@ -82,7 +84,7 @@ module "firewall" {
   version = "~> 2.0"
 
   name                = local.firewall_name
-  resource_group_name = local.resource_group
+  resource_group_name = module.resource_group.name
   location            = var.location
   sku_tier            = var.sku_tier
   firewall_policy_id  = module.firewall_policy.id
