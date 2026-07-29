@@ -98,12 +98,6 @@ variable "location" {
   type        = string
 }
 
-variable "tags" {
-  description = "A mapping of tags to assign to the resource."
-  type        = map(string)
-  default     = {}
-}
-
 variable "priority" {
   description = "The priority of the Firewall Policy Rule Collection Group. The range is 100-65000."
   type        = number

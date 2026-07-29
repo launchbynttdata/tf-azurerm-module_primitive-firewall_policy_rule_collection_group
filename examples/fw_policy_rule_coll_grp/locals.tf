@@ -14,6 +14,4 @@ locals {
   resource_group                             = module.resource_names["resource_group"].minimal_random_suffix
   firewall_policy_name                       = module.resource_names["firewall_policy"].minimal_random_suffix
   firewall_policy_rule_collection_group_name = module.resource_names["fw_plcy_rule_colln_grp"].minimal_random_suffix
-
-  tags = merge({ provisioner = "terraform" }, var.tags)
 }
