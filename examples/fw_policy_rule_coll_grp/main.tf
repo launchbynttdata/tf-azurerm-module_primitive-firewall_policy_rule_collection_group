@@ -12,7 +12,7 @@
 
 module "firewall" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall/azurerm"
-  version = "~> 2.4"
+  version = "~> 1.0"
 
   firewall_map = local.firewall_map
 
@@ -21,7 +21,7 @@ module "firewall" {
 
 module "firewall_policy" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall_policy/azurerm"
-  version = "~> 2.4"
+  version = "~> 1.0"
 
   name                = local.firewall_policy_name
   resource_group_name = module.resource_group.name
@@ -64,7 +64,7 @@ module "resource_group" {
 # This module generates the resource-name of resources based on resource_type, naming_prefix, env etc.
 module "resource_names" {
   source  = "terraform.registry.launch.nttdata.com/module_library/resource_name/launch"
-  version = "~> 2.4"
+  version = "~> 1.0"
 
   for_each = var.resource_names_map
 
