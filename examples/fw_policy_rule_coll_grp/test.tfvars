@@ -4,15 +4,7 @@ class_env               = "gotest"
 instance_env            = 0
 instance_resource       = 0
 location                = "eastus2"
-//variables for firewall module
-logs_destinations_ids = []
-subnet_cidr           = "10.0.1.0/24"
-//variables for network module
-address_space   = ["10.0.0.0/16"]
-subnet_prefixes = []
-use_for_each    = true
-//variables for fw policy rule collection module
-priority = 200
+priority                = 200
 application_rule_collection = [{
   name     = "App-Coll01"
   action   = "Allow"
