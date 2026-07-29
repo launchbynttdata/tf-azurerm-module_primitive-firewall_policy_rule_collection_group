@@ -10,26 +10,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module "firewall" {
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall/azurerm"
-  version = "~> 2.0"
-
-  firewall_map = local.firewall_map
-
-  depends_on = [module.resource_group, module.network, module.firewall_policy]
-}
-
-module "firewall_policy" {
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall_policy/azurerm"
-  version = "~> 2.0"
-
-  name                = local.firewall_policy_name
-  resource_group_name = module.resource_group.name
-  location            = var.location
-
-  depends_on = [module.resource_group]
-}
-
 module "firewall_policy_rule_collection_group" {
   source = "../.."
 
@@ -41,11 +21,13 @@ module "firewall_policy_rule_collection_group" {
   nat_rule_collection         = var.nat_rule_collection
 }
 
-module "network" {
-  source  = "terraform.registry.launch.nttdata.com/module_collection/virtual_network/azurerm"
-  version = "~> 2.0"
+module "firewall_policy" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall_policy/azurerm"
+  version = "~> 1.0"
 
-  network_map = local.network_map
+  name                = local.firewall_policy_name
+  resource_group_name = module.resource_group.name
+  location            = var.location
 
   depends_on = [module.resource_group]
 }
@@ -59,6 +41,67 @@ module "resource_group" {
   tags = {
     resource_name = local.resource_group
   }
+}
+
+module "public_ip" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm"
+  version = "~> 2.0"
+
+  name                = local.public_ip_custom_name
+  resource_group_name = local.resource_group
+  location            = var.location
+  allocation_method   = "Static"
+  sku                 = "Standard"
+
+  tags = local.tags
+
+  depends_on = [module.resource_group]
+}
+
+module "network" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/virtual_network/azurerm"
+  version = "~> 3.2"
+
+  resource_group_name = local.resource_group
+  vnet_name           = local.virtual_network_name
+  vnet_location       = var.location
+  address_space       = var.address_space
+
+  subnets = {
+    AzureFirewallSubnet           = { prefix = cidrsubnet(var.address_space[0], 10, 0) }
+    AzureFirewallManagementSubnet = { prefix = cidrsubnet(var.address_space[0], 10, 1) }
+  }
+
+  tags = local.tags
+
+  depends_on = [module.resource_group]
+}
+
+module "firewall" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall/azurerm"
+  version = "~> 2.0"
+
+  name                = local.firewall_name
+  resource_group_name = local.resource_group
+  location            = var.location
+  sku_tier            = var.sku_tier
+  firewall_policy_id  = module.firewall_policy.id
+
+  ip_configuration = [{
+    name                 = "Data"
+    subnet_id            = module.network.subnet_name_id_map["AzureFirewallSubnet"]
+    public_ip_address_id = null
+  }]
+
+  management_ip_configuration = {
+    name                 = "Management"
+    subnet_id            = module.network.subnet_name_id_map["AzureFirewallManagementSubnet"]
+    public_ip_address_id = module.public_ip.id
+  }
+
+  tags = local.tags
+
+  depends_on = [module.resource_group, module.network, module.firewall_policy, module.public_ip]
 }
 
 # This module generates the resource-name of resources based on resource_type, naming_prefix, env etc.

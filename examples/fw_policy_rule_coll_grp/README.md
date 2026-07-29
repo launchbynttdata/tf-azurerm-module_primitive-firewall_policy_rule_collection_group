@@ -13,9 +13,10 @@
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_firewall"></a> [firewall](#module\_firewall) | terraform.registry.launch.nttdata.com/module_primitive/firewall/azurerm | ~> 2.0 |
-| <a name="module_firewall_policy"></a> [firewall\_policy](#module\_firewall\_policy) | terraform.registry.launch.nttdata.com/module_primitive/firewall_policy/azurerm | ~> 2.0 |
+| <a name="module_firewall_policy"></a> [firewall\_policy](#module\_firewall\_policy) | terraform.registry.launch.nttdata.com/module_primitive/firewall_policy/azurerm | ~> 1.0 |
 | <a name="module_firewall_policy_rule_collection_group"></a> [firewall\_policy\_rule\_collection\_group](#module\_firewall\_policy\_rule\_collection\_group) | ../.. | n/a |
-| <a name="module_network"></a> [network](#module\_network) | terraform.registry.launch.nttdata.com/module_collection/virtual_network/azurerm | ~> 2.0 |
+| <a name="module_network"></a> [network](#module\_network) | terraform.registry.launch.nttdata.com/module_primitive/virtual_network/azurerm | ~> 3.2 |
+| <a name="module_public_ip"></a> [public\_ip](#module\_public\_ip) | terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm | ~> 2.0 |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
 | <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 2.0 |
 
