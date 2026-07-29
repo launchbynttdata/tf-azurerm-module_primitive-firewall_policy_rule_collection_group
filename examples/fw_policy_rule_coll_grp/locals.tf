@@ -12,11 +12,8 @@
 
 locals {
   resource_group                             = module.resource_names["resource_group"].minimal_random_suffix
-  firewall_name                              = module.resource_names["firewall"].minimal_random_suffix
   firewall_policy_name                       = module.resource_names["firewall_policy"].minimal_random_suffix
   firewall_policy_rule_collection_group_name = module.resource_names["fw_plcy_rule_colln_grp"].minimal_random_suffix
-  public_ip_custom_name                      = module.resource_names["public_ip"].minimal_random_suffix
-  virtual_network_name                       = module.resource_names["hub_vnet"].minimal_random_suffix
 
   tags = merge({ provisioner = "terraform" }, var.tags)
 }

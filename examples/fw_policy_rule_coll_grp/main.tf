@@ -10,30 +10,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module "firewall_policy_rule_collection_group" {
-  source = "../.."
-
-  name                        = local.firewall_policy_rule_collection_group_name
-  firewall_policy_id          = module.firewall_policy.id
-  priority                    = var.priority
-  application_rule_collection = var.application_rule_collection
-  network_rule_collection     = var.network_rule_collection
-  nat_rule_collection         = var.nat_rule_collection
-
-  depends_on = [module.firewall_policy]
-}
-
-module "firewall_policy" {
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall_policy/azurerm"
-  version = "~> 1.0"
-
-  name                = local.firewall_policy_name
-  resource_group_name = module.resource_group.name
-  location            = var.location
-
-  depends_on = [module.resource_group]
-}
-
 module "resource_group" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm"
   version = "~> 1.0"
@@ -45,68 +21,6 @@ module "resource_group" {
   }
 }
 
-module "public_ip" {
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm"
-  version = "~> 2.0"
-
-  name                = local.public_ip_custom_name
-  resource_group_name = module.resource_group.name
-  location            = var.location
-  allocation_method   = "Static"
-  sku                 = "Standard"
-
-  tags = local.tags
-
-  depends_on = [module.resource_group]
-}
-
-module "network" {
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/virtual_network/azurerm"
-  version = "~> 3.2"
-
-  resource_group_name = module.resource_group.name
-  vnet_name           = local.virtual_network_name
-  vnet_location       = var.location
-  address_space       = var.address_space
-
-  subnets = {
-    AzureFirewallSubnet           = { prefix = cidrsubnet(var.address_space[0], 10, 0) }
-    AzureFirewallManagementSubnet = { prefix = cidrsubnet(var.address_space[0], 10, 1) }
-  }
-
-  tags = local.tags
-
-  depends_on = [module.resource_group]
-}
-
-module "firewall" {
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall/azurerm"
-  version = "~> 2.0"
-
-  name                = local.firewall_name
-  resource_group_name = module.resource_group.name
-  location            = var.location
-  sku_tier            = var.sku_tier
-  firewall_policy_id  = module.firewall_policy.id
-
-  ip_configuration = [{
-    name                 = "Data"
-    subnet_id            = module.network.subnet_name_id_map["AzureFirewallSubnet"]
-    public_ip_address_id = null
-  }]
-
-  management_ip_configuration = {
-    name                 = "Management"
-    subnet_id            = module.network.subnet_name_id_map["AzureFirewallManagementSubnet"]
-    public_ip_address_id = module.public_ip.id
-  }
-
-  tags = local.tags
-
-  depends_on = [module.resource_group, module.network, module.firewall_policy, module.public_ip]
-}
-
-# This module generates the resource-name of resources based on resource_type, naming_prefix, env etc.
 module "resource_names" {
   source  = "terraform.registry.launch.nttdata.com/module_library/resource_name/launch"
   version = "~> 2.0"
@@ -121,4 +35,28 @@ module "resource_names" {
   maximum_length          = each.value.max_length
   logical_product_family  = var.logical_product_family
   logical_product_service = var.logical_product_service
+}
+
+module "firewall_policy" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/firewall_policy/azurerm"
+  version = "~> 1.0"
+
+  name                = local.firewall_policy_name
+  resource_group_name = module.resource_group.name
+  location            = var.location
+
+  depends_on = [module.resource_group]
+}
+
+module "firewall_policy_rule_collection_group" {
+  source = "../.."
+
+  name                        = local.firewall_policy_rule_collection_group_name
+  firewall_policy_id          = module.firewall_policy.id
+  priority                    = var.priority
+  application_rule_collection = var.application_rule_collection
+  network_rule_collection     = var.network_rule_collection
+  nat_rule_collection         = var.nat_rule_collection
+
+  depends_on = [module.firewall_policy]
 }

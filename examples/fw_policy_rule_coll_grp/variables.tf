@@ -22,24 +22,12 @@ variable "resource_names_map" {
       name       = "rg"
       max_length = 80
     }
-    hub_vnet = {
-      name       = "hubvnet"
-      max_length = 80
-    }
-    firewall = {
-      name       = "fw"
-      max_length = 80
-    }
     firewall_policy = {
       name       = "fwpolicy"
       max_length = 80
     }
     fw_plcy_rule_colln_grp = {
       name       = "fwplcyrulecollngrp"
-      max_length = 80
-    }
-    public_ip = {
-      name       = "pip"
       max_length = 80
     }
   }
@@ -108,17 +96,6 @@ variable "class_env" {
 variable "location" {
   description = "Azure region to use"
   type        = string
-}
-
-variable "address_space" {
-  description = "The address space that is used the virtual network."
-  type        = list(string)
-}
-
-variable "sku_tier" {
-  type        = string
-  description = "SKU tier of the Firewall. Possible values are `Premium` and `Standard`"
-  default     = "Standard"
 }
 
 variable "tags" {

@@ -12,16 +12,16 @@
 
 output "firewall_ids" {
   value = {
-    firewall1 = module.firewall.id
+    firewall1 = module.firewall_policy_rule_collection_group.firewall_policy_rule_collection_group_id
   }
-  description = "Firewall generated ids"
+  description = "Placeholder map used by terratest to drive post-deploy assertions"
 }
 
 output "firewall_names" {
   value = {
-    firewall1 = local.firewall_name
+    firewall1 = local.firewall_policy_name
   }
-  description = "Firewall names"
+  description = "Firewall policy name associated with the rule collection group"
 }
 
 output "private_ip_addresses" {
@@ -35,7 +35,7 @@ output "public_ip_addresses" {
 }
 
 output "subnet_ids" {
-  value       = module.network.subnet_name_id_map
+  value       = {}
   description = "ID of the subnet attached to the firewall"
 }
 

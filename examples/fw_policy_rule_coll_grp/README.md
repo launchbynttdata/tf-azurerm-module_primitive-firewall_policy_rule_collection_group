@@ -12,11 +12,8 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_firewall"></a> [firewall](#module\_firewall) | terraform.registry.launch.nttdata.com/module_primitive/firewall/azurerm | ~> 2.0 |
 | <a name="module_firewall_policy"></a> [firewall\_policy](#module\_firewall\_policy) | terraform.registry.launch.nttdata.com/module_primitive/firewall_policy/azurerm | ~> 1.0 |
 | <a name="module_firewall_policy_rule_collection_group"></a> [firewall\_policy\_rule\_collection\_group](#module\_firewall\_policy\_rule\_collection\_group) | ../.. | n/a |
-| <a name="module_network"></a> [network](#module\_network) | terraform.registry.launch.nttdata.com/module_primitive/virtual_network/azurerm | ~> 3.2 |
-| <a name="module_public_ip"></a> [public\_ip](#module\_public\_ip) | terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm | ~> 2.0 |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
 | <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 2.0 |
 
@@ -28,7 +25,6 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_address_space"></a> [address\_space](#input\_address\_space) | The address space that is used the virtual network. | `list(string)` | n/a | yes |
 | <a name="input_application_rule_collection"></a> [application\_rule\_collection](#input\_application\_rule\_collection) | The Application Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br/>    name     = string<br/>    action   = string<br/>    priority = number<br/>    rule = list(object({<br/>      name        = string<br/>      description = optional(string)<br/>      protocols = optional(list(object({<br/>        type = string<br/>        port = number<br/>      })))<br/>      http_headers = optional(list(object({<br/>        name  = string<br/>        value = string<br/>      })))<br/>      source_addresses      = optional(list(string))<br/>      source_ip_groups      = optional(list(string))<br/>      destination_addresses = optional(list(string))<br/>      destination_urls      = optional(list(string))<br/>      destination_fqdns     = optional(list(string))<br/>      destination_fqdn_tags = optional(list(string))<br/>      terminate_tls         = optional(bool)<br/>      web_categories        = optional(list(string))<br/>    }))<br/>  }))</pre> | `[]` | no |
 | <a name="input_class_env"></a> [class\_env](#input\_class\_env) | Environment where resource is going to be deployed. | `string` | `"demo"` | no |
 | <a name="input_instance_env"></a> [instance\_env](#input\_instance\_env) | Number that represents the instance of the environment. | `number` | `0` | no |
@@ -39,16 +35,15 @@ No resources.
 | <a name="input_nat_rule_collection"></a> [nat\_rule\_collection](#input\_nat\_rule\_collection) | The NAT Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br/>    name     = string<br/>    action   = string<br/>    priority = number<br/>    rule = list(object({<br/>      name                = string<br/>      description         = optional(string)<br/>      protocols           = list(string)<br/>      source_addresses    = optional(list(string))<br/>      source_ip_groups    = optional(list(string))<br/>      destination_ports   = optional(list(string))<br/>      destination_address = optional(string)<br/>      translated_address  = optional(string)<br/>      translated_port     = number<br/>      translated_fqdn     = optional(string)<br/>    }))<br/>  }))</pre> | `[]` | no |
 | <a name="input_network_rule_collection"></a> [network\_rule\_collection](#input\_network\_rule\_collection) | The Network Rule Collection to use in this Firewall Policy Rule Collection Group. | <pre>list(object({<br/>    name     = string<br/>    action   = string<br/>    priority = number<br/>    rule = list(object({<br/>      name                  = string<br/>      description           = optional(string)<br/>      protocols             = list(string)<br/>      destination_ports     = list(string)<br/>      source_addresses      = optional(list(string))<br/>      source_ip_groups      = optional(list(string))<br/>      destination_addresses = optional(list(string))<br/>      destination_fqdns     = optional(list(string))<br/>    }))<br/>  }))</pre> | `[]` | no |
 | <a name="input_priority"></a> [priority](#input\_priority) | The priority of the Firewall Policy Rule Collection Group. The range is 100-65000. | `number` | n/a | yes |
-| <a name="input_resource_names_map"></a> [resource\_names\_map](#input\_resource\_names\_map) | A map of key to resource\_name that will be used by tf-launch-module\_library-resource\_name to generate resource names | <pre>map(object({<br/>    name       = string<br/>    max_length = optional(number, 60)<br/>  }))</pre> | <pre>{<br/>  "firewall": {<br/>    "max_length": 80,<br/>    "name": "fw"<br/>  },<br/>  "firewall_policy": {<br/>    "max_length": 80,<br/>    "name": "fwpolicy"<br/>  },<br/>  "fw_plcy_rule_colln_grp": {<br/>    "max_length": 80,<br/>    "name": "fwplcyrulecollngrp"<br/>  },<br/>  "hub_vnet": {<br/>    "max_length": 80,<br/>    "name": "hubvnet"<br/>  },<br/>  "public_ip": {<br/>    "max_length": 80,<br/>    "name": "pip"<br/>  },<br/>  "resource_group": {<br/>    "max_length": 80,<br/>    "name": "rg"<br/>  }<br/>}</pre> | no |
-| <a name="input_sku_tier"></a> [sku\_tier](#input\_sku\_tier) | SKU tier of the Firewall. Possible values are `Premium` and `Standard` | `string` | `"Standard"` | no |
+| <a name="input_resource_names_map"></a> [resource\_names\_map](#input\_resource\_names\_map) | A map of key to resource\_name that will be used by tf-launch-module\_library-resource\_name to generate resource names | <pre>map(object({<br/>    name       = string<br/>    max_length = optional(number, 60)<br/>  }))</pre> | <pre>{<br/>  "firewall_policy": {<br/>    "max_length": 80,<br/>    "name": "fwpolicy"<br/>  },<br/>  "fw_plcy_rule_colln_grp": {<br/>    "max_length": 80,<br/>    "name": "fwplcyrulecollngrp"<br/>  },<br/>  "resource_group": {<br/>    "max_length": 80,<br/>    "name": "rg"<br/>  }<br/>}</pre> | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_firewall_ids"></a> [firewall\_ids](#output\_firewall\_ids) | Firewall generated ids |
-| <a name="output_firewall_names"></a> [firewall\_names](#output\_firewall\_names) | Firewall names |
+| <a name="output_firewall_ids"></a> [firewall\_ids](#output\_firewall\_ids) | Placeholder map used by terratest to drive post-deploy assertions |
+| <a name="output_firewall_names"></a> [firewall\_names](#output\_firewall\_names) | Firewall policy name associated with the rule collection group |
 | <a name="output_policy_name"></a> [policy\_name](#output\_policy\_name) | Firewall policy name |
 | <a name="output_policy_rule_collection_group_id"></a> [policy\_rule\_collection\_group\_id](#output\_policy\_rule\_collection\_group\_id) | The ID of the firewall policy rule collection group |
 | <a name="output_policy_rule_collection_group_name"></a> [policy\_rule\_collection\_group\_name](#output\_policy\_rule\_collection\_group\_name) | Firewall policy rule collection group name |

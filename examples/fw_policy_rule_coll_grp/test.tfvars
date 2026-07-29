@@ -4,7 +4,6 @@ class_env               = "gotest"
 instance_env            = 0
 instance_resource       = 0
 location                = "eastus2"
-address_space           = ["10.0.0.0/16"]
 priority                = 200
 application_rule_collection = [{
   name     = "App-Coll01"
