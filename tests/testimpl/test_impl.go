@@ -29,12 +29,12 @@ func TestComposableFirewall(t *testing.T, ctx types.TestContext) {
 		t.Fatalf("Error getting firewall policy rule collection groups client: %v", err)
 	}
 
-	firewallIds := terraform.OutputMap(t, ctx.TerratestTerraformOptions(), "firewall_ids")
+	firewallIds := terraform.OutputMapContext(t, context.Background(), ctx.TerratestTerraformOptions(), "firewall_ids")
 	for range firewallIds {
 		t.Run("doesFwPolicyRuleCollGrpExist", func(t *testing.T) {
-			resourceGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
-			policyName := terraform.Output(t, ctx.TerratestTerraformOptions(), "policy_name")
-			policyRuleCollectionGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "policy_rule_collection_group_name")
+			resourceGroupName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "resource_group_name")
+			policyName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "policy_name")
+			policyRuleCollectionGroupName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "policy_rule_collection_group_name")
 
 			prcg, err := firewallPolicyRuleCollectionGroupsClient.Get(context.Background(), resourceGroupName, policyName, policyRuleCollectionGroupName, nil)
 			if err != nil {
